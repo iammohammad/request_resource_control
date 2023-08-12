@@ -16,7 +16,6 @@ import substrate_graphs
 repetitions = 33
 twindow_length = 1
 
-
 embb_arrival_rate = 0
 urllc_arrival_rate = 0
 miot_arrival_rate = 0
@@ -155,7 +154,6 @@ class Sim:
     def set_run_till(self, t):
         self.run_till = t
 
-
     def create_event(self, tipo, inicio, extra=None, f=None):
         if inicio < self.horario:
             print("***false")
@@ -179,7 +177,6 @@ class Sim:
         index = self.binary_search(self.eventos, 0, len(self.eventos) - 1, evt.inicio)
         self.eventos = self.eventos[:index] + [evt] + self.eventos[index:]
 
-
         if evt.tipo == "arrival":
             # agregar nslrs en window list
             self.total_reqs += 1
@@ -196,7 +193,6 @@ class Sim:
             else:  # evt.extra["service_type"] == "miot":
                 self.total_miot_reqs += 1
                 self.window_req_list[2].append(copy.deepcopy(request))
-
 
     def print_eventos(self):
         print("HORARIO: ", self.horario, "\nTotal Eventos:", len(self.eventos))
@@ -217,7 +213,7 @@ class Sim:
     def run(self, c):
         while self.horario < self.run_till:
             p = self.get_proximo_evento()
-            if p == None:
+            if p is None:
                 return
             p.function(c, p)
 
@@ -250,7 +246,6 @@ def filtro(window_req_list, action):
                 req.service_type == "miot" and req.bandera <= actions[action][2] * 100):
             logging.debug("**agregando request...")
             granted_req_list.append(req)
-
 
     return granted_req_list
 
@@ -374,7 +369,6 @@ def resource_allocation(cn):  # cn=controller
             step_link_profit += profit_links / max_link_profit
             step_node_profit += profit_nodes / max_node_profit
 
-
             if req.service_type == "embb":
                 sim.current_instatiated_reqs[0] += 1
                 sim.embb_accepted_reqs += 1
@@ -488,7 +482,6 @@ def get_state(substrate):
     cod_avble_central = get_code(substrate.graph["centralized_cpu"] / centralized_initial)
     cod_avble_bw = get_code(substrate.graph["bw"] / bw_initial)
 
-
     # 3-parameter state:
     state = [np.float32(cod_avble_edge), np.float32(cod_avble_central), np.float32(cod_avble_bw)]
 
@@ -585,14 +578,12 @@ def func_twindow(c, evt):
     c.central_utl += step_central_cpu_utl
     c.link_utl += step_links_bw_utl
 
-
     r = step_profit
     next_state = get_state(c.substrate, c.simulation)  # getting the next state
 
     s_ = translateStateToIndex(next_state)  # getting index of the next state
     a_ = agente.take_action(s_, False)  # select action for the next state
     agente.updateQ(step_profit, s, a, s_, a_, evt.extra["end_state"])  # (reward,s,a,s_,a_end_sate)
-
 
     a = a_
     s = s_

@@ -127,9 +127,7 @@ def group_vnfs(vnfs_list, node_type):
         creates different vnodes and adds them to the reduced graph
     '''
 
-    vnode = dict
-    vnode["vnfs"] = []  # ids of the vnfs that make up this vnode
-    vnode["type"] = node_type
+    vnode = {"vnfs": [], "type": node_type}
 
     if len(nsl_graph_red["vnodes"]) == 0:
         cont = 0
